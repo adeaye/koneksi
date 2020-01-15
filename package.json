@@ -1,0 +1,27 @@
+{
+  "name": "koneksi-sd",
+  "version": "1.0.0",
+  "description": "koneksi ke sd",
+  "main": "dist/sdk.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/adeaye/koneksi.git"
+  },
+  "keywords": [
+    "koneksi-sd",
+    "koneksi"
+  ],
+  "author": "ayaya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adeaye/koneksi/issues"
+  },
+  "homepage": "https://github.com/adeaye/koneksi#readme",
+  "dependencies": {
+    "axios": "^0.19.1",
+    "is-url": "^1.2.4"
+  }
+}
