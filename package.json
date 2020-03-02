@@ -1,9 +1,10 @@
 {
   "name": "koneksi-sd",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "koneksi ke sd",
-  "main": "dist/sdk.js",
+  "main": "dist/index.js",
   "scripts": {
+    "bundle": "webpack --config webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,7 +22,10 @@
   },
   "homepage": "https://github.com/adeaye/koneksi#readme",
   "dependencies": {
-    "axios": "^0.19.1",
-    "is-url": "^1.2.4"
+    "date-fns": "^2.10.0"
+  },
+  "devDependencies": {
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
   }
 }

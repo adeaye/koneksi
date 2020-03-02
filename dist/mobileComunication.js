@@ -1,5 +1,8 @@
-import { userDataManager, imageDataManager, scannerDataManager } from "./dataManager";
-import { receiveUserProfile, receiveMobileImage, receiveScanner } from "./userScript";
+import {
+  userDataManager,
+  imageDataManager,
+  scannerDataManager
+} from "./dataManager";
 
 window.androidObj = function AndroidClass() {};
 
@@ -12,7 +15,7 @@ export function getMobileOperatingSystem() {
 
   if (/android/i.test(userAgent)) {
     return "Android";
-  } 
+  }
   if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
     return "iOS";
   }
@@ -23,12 +26,11 @@ export function getMobileOperatingSystem() {
 export function qrScanner() {
   try {
     if (getMobileOperatingSystem() === "iOS") {
-      window.webkit.messageHandlers.qrScanner.postMessage('');
+      window.webkit.messageHandlers.qrScanner.postMessage("");
     } else if (getMobileOperatingSystem() === "Android") {
       window.androidObj.qrScanner();
     }
-  } catch (err) {
-  }
+  } catch (err) {}
 }
 /**
  * @param  {string} token
@@ -47,19 +49,19 @@ export function sendTokenToMobile(token) {
  */
 window.receiveUserData = function(payload) {
   userDataManager.set(payload);
-  receiveUserProfile(JSON.parse(payload));
-}
+  // receiveUserProfile(JSON.parse(payload));
+};
 
 export function getMobileImage() {
   try {
     if (getMobileOperatingSystem() === "iOS") {
-      window.webkit.messageHandlers.getImage.postMessage('');
+      window.webkit.messageHandlers.getImage.postMessage("");
     } else if (getMobileOperatingSystem() === "Android") {
       window.androidObj.getImage();
     } else {
     }
   } catch (error) {
-    console.log('err', error)
+    console.log("err", error);
   }
 }
 /**
@@ -67,40 +69,40 @@ export function getMobileImage() {
  */
 window.receiveImage = function(base64String) {
   imageDataManager.set(base64String);
-  receiveMobileImage(base64String);
-}
+  // receiveMobileImage(base64String);
+};
 /**
  * @param  {string} scannerString
  */
 window.receiveScannerData = function(scannerString) {
   scannerDataManager.set(scannerString);
-  receiveScanner(scannerString);
-}
+  // receiveScanner(scannerString);
+};
 
 export function openMobileModal() {
   try {
     if (getMobileOperatingSystem() === "iOS") {
-      window.webkit.messageHandlers.dialogConfirm.postMessage('');
+      window.webkit.messageHandlers.dialogConfirm.postMessage("");
     } else if (getMobileOperatingSystem() === "Android") {
       window.androidObj.dialogConfirm();
     } else {
     }
   } catch (error) {
-    console.log('err', error)
+    console.log("err", error);
   }
 }
 
 export function sendInquiryToMobile(payload) {
-  const stringifiedPayload = JSON.stringify(payload)
-  console.log('in', stringifiedPayload)
+  const stringifiedPayload = JSON.stringify(payload);
+  console.log("in", stringifiedPayload);
   try {
     if (getMobileOperatingSystem() === "iOS") {
       // console.log('token masuk IOS', token)
-      console.log('stringify', stringifiedPayload)
+      console.log("stringify", stringifiedPayload);
       window.webkit.messageHandlers.sendInquiry.postMessage(stringifiedPayload);
     } else if (getMobileOperatingSystem() === "Android") {
       // console.log('token masuk Android', token)
-      console.log('stringify', stringifiedPayload)
+      console.log("stringify", stringifiedPayload);
       window.androidObj.sendInquiry(stringifiedPayload);
     } else {
       console.log("Unknown");

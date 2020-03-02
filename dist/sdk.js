@@ -1,6 +1,4 @@
-import APICall from "./api-call";
 import {
-  sendTokenToMobile,
   getMobileImage,
   qrScanner,
   sendInquiryToMobile
@@ -9,53 +7,32 @@ import {
   userDataManager,
   deviceIdManager,
   imageDataManager,
-  scannerDataManager,
-  tokenManager
+  scannerDataManager
 } from "./dataManager";
+
+import { format } from "date-fns";
 
 class MiniApps {
   constructor(options) {
-    this.input = "hallo";
     // this.options = options;
-
-    this.api = new APICall(
-      options.baseURL,
-      options.httpsAgent,
-      options.httpAgent,
-      options.publicKey,
-      options.secretKey
-    );
+    this.appId = options.appId;
+    this.developerId = options.developerId;
+    this.publicKey = options.publicKey;
   }
   getDeviceId() {
+    console.log("test device id");
     return deviceIdManager.get();
-  }
-  async userLogin() {
-    // TODO need to handle if device id is null
-    const deviceId = this.getDeviceId();
-    const payload = {
-      deviceId
-    };
-    const data = await this.api.send("POST", "v1/session", payload);
-    sendTokenToMobile(data.data.token);
-    // return data
-  }
-  async checkDeviceId(deviceId) {
-    const payload = {
-      deviceId
-      // add key => device: 'ios' or 'android'
-    };
-    deviceIdManager.set(deviceId);
-    const data = await this.api.send(
-      "POST",
-      "v1/session/check-device",
-      payload
-    );
-    // TODO undo comment if ready
-    // return data;
-    return false
   }
   getUserProfile() {
     return JSON.parse(userDataManager.get());
+  }
+
+  activateMobileCamera() {
+    getMobileImage();
+  }
+  activateMobileScanner() {
+    console.log("asd", this.appId);
+    qrScanner();
   }
 
   sendPicture() {
@@ -70,49 +47,32 @@ class MiniApps {
   getScanner() {
     return scannerDataManager.get();
   }
+  /**
+   * Brief description of the function here.
+   * @summary If the description is long, write your summary here. Otherwise, feel free to remove this.
+   * @param {{transactionId: string, totalAmount: number, items: Array[{name: string, qty: number, unitPrice: number}]}} payload - Brief description of the parameter here. Note: For other notations of data types, please refer to JSDocs: DataTypes command.
+   * @return {ReturnValueDataTypeHere} Brief description of the returning value here.
+   */
   payBill(payload) {
-    sendInquiryToMobile(payload)
-  }
-  userLoginWithoutAuth() {
-    userDataManager.remove();
-    tokenManager.remove();
-  }
-  // async getUserProfile(id) {
-  //     this.id = id
-  //     const doc = `getUserProfile with id ${this.id}`
+    // TODO validation check required value
 
-  //     return doc
+    // Terminalname and redirecturl handled by mobile
+    const inquiryPayload = {
+      ...payload,
+      trxDate: format(new Date(), "yyyyMMddHHMMSS"),
+      appId: this.appId,
+      appTrxId: payload.transactionId,
+      developerId: this.developerId,
+      totalAmount: payload.totalAmount,
+      items: payload.items
+    };
+    sendInquiryToMobile(inquiryPayload);
+  }
+  // TODO remove this below
+  // userLoginWithoutAuth() {
+  //   userDataManager.remove();
+  //   tokenManager.remove();
   // }
-
-  async getTokenAccess(cunsomer, accessToken) {
-    this.cunsomer = cunsomer;
-    this.accessToken = accessToken;
-    const doc = `getTokenAccess with customer ${this.cunsomer} accessToken ${this.accessToken}`;
-
-    return doc;
-  }
-
-  async getBalance(id) {
-    this.id = id;
-    const doc = `getBalance with id ${this.id}`;
-
-    return doc;
-  }
-
-  async getUserTokenPayment(id, orderId) {
-    this.id = id;
-    this.orderId = orderId;
-    const doc = `id : ${this.id} orderId : ${this.orderId}`;
-
-    return doc;
-  }
-
-  async getUserQR(id) {
-    this.id = id;
-    const doc = `getUserQr with id ${this.id}`;
-
-    return doc;
-  }
 }
 
 // module.exports = MiniApps;
